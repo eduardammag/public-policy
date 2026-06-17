@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-"""Run the full Seguranca Presente analysis pipeline."""
 from __future__ import annotations
 
 import subprocess
@@ -12,10 +10,12 @@ from src.configuracoes.config import (
     GRAPHS_DIR,
     LLM_LABELS,
     MIN_ARTICLES_PER_EVENT,
+    OPENAI_MODEL,
     PIPELINE_WORKERS,
     ROOT,
     TABLES_DIR,
 )
+
 
 def run_step(name: str, command: list[str]) -> None:
     print(f"\n[INICIO] {name}", flush=True)
@@ -26,12 +26,6 @@ def run_step(name: str, command: list[str]) -> None:
 
 def main() -> int:
     print("Pipeline Seguranca Presente iniciada.", flush=True)
-    print(f"Raiz do projeto: {ROOT}", flush=True)
-    print(f"Tabelas: {TABLES_DIR}", flush=True)
-    print(f"Graficos: {GRAPHS_DIR}", flush=True)
-    print(f"Workers LLM: {PIPELINE_WORKERS}", flush=True)
-    print(f"Minimo de noticias por evento: {MIN_ARTICLES_PER_EVENT}", flush=True)
-
     print("\nPreparando pastas de saida...", flush=True)
     TABLES_DIR.mkdir(parents=True, exist_ok=True)
     GRAPHS_DIR.mkdir(parents=True, exist_ok=True)
@@ -44,6 +38,8 @@ def main() -> int:
             "-m",
             "src.pipeline.classificar_noticias",
             "--all",
+            "--model",
+            OPENAI_MODEL,
             "--out",
             str(LLM_LABELS),
             "--workers",
@@ -79,6 +75,8 @@ def main() -> int:
             str(CLASSIFIED_NEWS),
             "--out",
             str(EVENTS_BY_ARTICLE),
+            "--tables-dir",
+            str(TABLES_DIR),
             "--markdown",
             str(EVENT_RANKING_MD),
             "--min-articles",
@@ -88,13 +86,7 @@ def main() -> int:
     )
     print(f"Eventos por noticia gerados em: {EVENTS_BY_ARTICLE}", flush=True)
     print(f"Ranking markdown gerado em: {EVENT_RANKING_MD}", flush=True)
-
-    print("\nPipeline concluida.")
-    print(f"- CSV classificado: {CLASSIFIED_NEWS}")
-    print(f"- Eventos por noticia: {EVENTS_BY_ARTICLE}")
-    print(f"- Ranking de eventos: {EVENT_RANKING_MD}")
-    print(f"- Tabelas: {TABLES_DIR}")
-    print(f"- Graficos: {GRAPHS_DIR}")
+    print("\nPipeline concluida.", flush=True)
     return 0
 
 

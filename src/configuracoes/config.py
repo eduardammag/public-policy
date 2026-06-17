@@ -34,5 +34,6 @@ EVENT_RANKING_MD = TABLES_DIR / "ranking-eventos.md"
 
 PIPELINE_WORKERS = 6
 MIN_ARTICLES_PER_EVENT = 3
+OPENAI_MODEL = "gpt-4o-mini"
 
 SENTIMENT_ORDER = ["muito negativo", "negativo", "neutro", "positivo", "muito positivo", "n/a",]

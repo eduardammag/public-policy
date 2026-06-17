@@ -1,3 +1,5 @@
+
+
 # Eventos Mais Amados e Odiados - Seguranca Presente
 
 Os eventos e sentimentos foram extraidos pelo mesmo prompt unico em `src/pipeline/classificar_noticias.py`.

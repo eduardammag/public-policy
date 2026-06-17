@@ -25,10 +25,6 @@ def load_labels(path: Path) -> pd.DataFrame:
     df["publishedAt"] = pd.to_datetime(df.get("publishedAt"), errors="coerce", utc=True)
     df["date"] = df["publishedAt"].dt.date
     df["month"] = df["publishedAt"].dt.to_period("M").astype(str)
-    if "confidence" in df.columns:
-        df["confidence"] = pd.to_numeric(df["confidence"], errors="coerce")
-    else:
-        df["confidence"] = pd.NA
     if "grau_ambiguidade" in df.columns:
         df["grau_ambiguidade"] = (
             df["grau_ambiguidade"]
@@ -128,20 +124,6 @@ def bar_counts(counts: pd.DataFrame, graphs_dir: Path) -> None:
     plt.close(fig)
 
 
-def confidence_histogram(df: pd.DataFrame, graphs_dir: Path) -> None:
-    valid = df.dropna(subset=["confidence"])
-    if valid.empty:
-        return
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.hist(valid["confidence"], bins=20, color="#457b9d", edgecolor="white")
-    ax.set_title("Histograma de confianca da classificacao")
-    ax.set_xlabel("Confianca")
-    ax.set_ylabel("Noticias")
-    fig.tight_layout()
-    fig.savefig(graphs_dir / "histograma_confianca.png", dpi=180)
-    plt.close(fig)
-
-
 def ambiguity_chart(df: pd.DataFrame, graphs_dir: Path, tables_dir: Path) -> None:
     valid = df[df["grau_ambiguidade"].isin(["baixo", "medio", "alto"])]
     if valid.empty:
@@ -226,7 +208,6 @@ def main() -> int:
     line_percent(monthly_pct, args.graphs_dir)
     stacked_area(monthly_pct, args.graphs_dir)
     bar_counts(counts, args.graphs_dir)
-    confidence_histogram(df, args.graphs_dir)
     ambiguity_chart(df, args.graphs_dir, args.tables_dir)
     score_histogram(df, args.graphs_dir)
     volume_line(df, args.graphs_dir)

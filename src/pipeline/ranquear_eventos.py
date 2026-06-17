@@ -11,9 +11,6 @@ from src.configuracoes.config import CONSOLIDA, SENTIMENT_ORDER, TABLES_DIR
 
 DEFAULT_LABELS = TABLES_DIR / "noticias_classificadas.csv"
 EVENTS_BY_ARTICLE = TABLES_DIR / "eventos_por_noticia.csv"
-EVENTS_SUMMARY = TABLES_DIR / "eventos_resumo.csv"
-LOVED_EVENTS = TABLES_DIR / "eventos_mais_amados.csv"
-HATED_EVENTS = TABLES_DIR / "eventos_mais_odiados.csv"
 
 SCORE_MAP = {
     "muito negativo": -2,
@@ -32,7 +29,6 @@ EVENT_COLUMNS = [
     "local",
     "data_evento",
     "descricao_curta",
-    "event_confidence",
 ]
 
 ARTICLE_FIELDS = [
@@ -93,8 +89,6 @@ def load_unified_labels(path: Path) -> pd.DataFrame:
         df["grau_ambiguidade"] = df["grau_ambiguidade"].map(normalize_ambiguity)
     else:
         df["grau_ambiguidade"] = ""
-    if "event_confidence" in df.columns:
-        df["event_confidence"] = pd.to_numeric(df["event_confidence"], errors="coerce")
     df["evento"] = df["evento"].where(df["evento"].astype(str).str.len() > 0, df["evento_chave"])
     df["evento_id"] = df["evento_id"].where(df["evento_id"].astype(str).str.len() > 0, df["evento_chave"].map(slugify))
     return (
@@ -128,11 +122,6 @@ def aggregate_events(events: pd.DataFrame, min_articles: int) -> pd.DataFrame:
             if "grau_ambiguidade" in group
             else {}
         )
-        event_confidence_mean = (
-            pd.to_numeric(group.get("event_confidence"), errors="coerce").mean()
-            if "event_confidence" in group
-            else pd.NA
-        )
         rows.append(
             {
                 "evento_id": event_id,
@@ -160,7 +149,6 @@ def aggregate_events(events: pd.DataFrame, min_articles: int) -> pd.DataFrame:
                 "ambiguidade_media": ambiguity_counts.get("medio", 0),
                 "ambiguidade_alta": ambiguity_counts.get("alto", 0),
                 "proporcao_ambiguidade_alta": round(ambiguity_counts.get("alto", 0) / n, 4),
-                "confianca_evento_media": round(event_confidence_mean, 4) if pd.notna(event_confidence_mean) else pd.NA,
                 "peso_positivo": positive_weight,
                 "peso_negativo": negative_weight,
                 "titulos_exemplo": " | ".join(group["title"].head(5).astype(str)),
@@ -172,7 +160,11 @@ def aggregate_events(events: pd.DataFrame, min_articles: int) -> pd.DataFrame:
     return summary.sort_values(["n_artigos", "score_medio"], ascending=[False, False])
 
 
-def write_rankings(events: pd.DataFrame, min_articles: int) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def write_rankings(
+    events: pd.DataFrame,
+    min_articles: int,
+    tables_dir: Path,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     summary_all = aggregate_events(events, min_articles=1)
     summary_ranked = aggregate_events(events, min_articles=min_articles)
     summary_ranked = summary_ranked[summary_ranked["score_medio"].notna()].copy()
@@ -184,9 +176,9 @@ def write_rankings(events: pd.DataFrame, min_articles: int) -> tuple[pd.DataFram
         ["score_medio", "share_negativo", "peso_negativo", "n_artigos"],
         ascending=[True, False, False, False],
     )
-    summary_all.to_csv(EVENTS_SUMMARY, index=False, encoding="utf-8-sig")
-    loved.to_csv(LOVED_EVENTS, index=False, encoding="utf-8-sig")
-    hated.to_csv(HATED_EVENTS, index=False, encoding="utf-8-sig")
+    summary_all.to_csv(tables_dir / "eventos_resumo.csv", index=False, encoding="utf-8-sig")
+    loved.to_csv(tables_dir / "eventos_mais_amados.csv", index=False, encoding="utf-8-sig")
+    hated.to_csv(tables_dir / "eventos_mais_odiados.csv", index=False, encoding="utf-8-sig")
     return summary_all, loved, hated
 
 
@@ -226,14 +218,16 @@ def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--labels", type=Path, default=DEFAULT_LABELS)
     parser.add_argument("--out", type=Path, default=EVENTS_BY_ARTICLE)
+    parser.add_argument("--tables-dir", type=Path, default=TABLES_DIR)
     parser.add_argument("--min-articles", type=int, default=3)
     parser.add_argument("--markdown", type=Path, default=TABLES_DIR / "ranking-eventos.md")
     parser.add_argument("--update-consolidacao", action="store_true")
     args = parser.parse_args(argv[1:])
+    args.tables_dir.mkdir(parents=True, exist_ok=True)
 
     events = load_unified_labels(args.labels)
     write_article_events(events, args.out)
-    _summary, loved, hated = write_rankings(events, args.min_articles)
+    _summary, loved, hated = write_rankings(events, args.min_articles, args.tables_dir)
     markdown = build_markdown(events, loved, hated, args.min_articles)
     args.markdown.write_text(markdown, encoding="utf-8")
     if args.update_consolidacao:
@@ -242,9 +236,9 @@ def main(argv: list[str]) -> int:
         base = existing.split(marker)[0].rstrip()
         CONSOLIDA.write_text(base + "\n\n" + markdown, encoding="utf-8")
     print(f"# wrote {args.out}", file=sys.stderr)
-    print(f"# wrote {EVENTS_SUMMARY}", file=sys.stderr)
-    print(f"# wrote {LOVED_EVENTS}", file=sys.stderr)
-    print(f"# wrote {HATED_EVENTS}", file=sys.stderr)
+    print(f"# wrote {args.tables_dir / 'eventos_resumo.csv'}", file=sys.stderr)
+    print(f"# wrote {args.tables_dir / 'eventos_mais_amados.csv'}", file=sys.stderr)
+    print(f"# wrote {args.tables_dir / 'eventos_mais_odiados.csv'}", file=sys.stderr)
     print(f"# wrote {args.markdown}", file=sys.stderr)
     return 0
 

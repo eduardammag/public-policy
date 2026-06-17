@@ -29,8 +29,8 @@ try:
 except Exception:
     openai = None
 
-# default model (tunable via OPENAI_MODEL env var)
 DEFAULT_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
+MAX_OUTPUT_TOKENS = 4000
 PROMPT_PATH = Path(__file__).resolve().parents[1] / "prompts" / "prompt_classificacao.txt"
 OUTPUT_FIELDS = [
     "recordKey",
@@ -58,7 +58,6 @@ OUTPUT_FIELDS = [
     "data_evento",
     "descricao_curta",
     "evidencia_evento",
-    "event_confidence",
     "model",
 ]
 
@@ -99,11 +98,44 @@ def ensure_openai_available() -> None:
     os.environ["OPENAI_API_KEY"] = key
 
 
+def openai_json(prompt: str, model: str) -> str:
+    client = openai.OpenAI()
+    resp = client.chat.completions.create(
+        model=model,
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "Voce classifica sentimento e extrai eventos jornalisticos "
+                    "especificos em portugues brasileiro."
+                ),
+            },
+            {"role": "user", "content": prompt},
+        ],
+        temperature=0,
+        max_tokens=MAX_OUTPUT_TOKENS,
+        response_format={"type": "json_object"},
+    )
+    return (resp.choices[0].message.content or "").strip()
+
+
 def load_prompt_template() -> str:
     try:
         return PROMPT_PATH.read_text(encoding="utf-8")
     except FileNotFoundError:
         raise SystemExit(f"Prompt file not found: {PROMPT_PATH}")
+
+
+def parse_json_response(content: str) -> dict:
+    content = (content or "").strip()
+    if content.startswith("```"):
+        content = re.sub(r"^```(?:json)?\s*", "", content, flags=re.IGNORECASE)
+        content = re.sub(r"\s*```$", "", content)
+    start = content.find("{")
+    end = content.rfind("}")
+    if start >= 0 and end > start:
+        content = content[start : end + 1]
+    return json.loads(content, strict=False)
 
 
 def normalize_label(label: str | None) -> str:
@@ -136,44 +168,43 @@ def normalize_ambiguity(value: str | None) -> str:
     return "alto"
 
 
-def classify_text(text: str, model: str = DEFAULT_MODEL, retries: int = 3) -> dict:
+def classify_text(
+    text: str,
+    model: str = DEFAULT_MODEL,
+    retries: int = 3,
+) -> dict:
     ensure_openai_available()
     template = load_prompt_template()
     prompt = template.replace("{noticia}", text[:10000])
     last_error = None
     for attempt in range(1, retries + 1):
         try:
-            client = openai.OpenAI()
-            resp = client.chat.completions.create(
-                model=model,
-                messages=[
-                    {
-                        "role": "system",
-                        "content": (
-                            "Voce classifica sentimento e extrai eventos jornalisticos "
-                            "especificos em portugues brasileiro."
-                        ),
-                    },
-                    {"role": "user", "content": prompt},
-                ],
-                temperature=0,
-                max_tokens=520,
-                response_format={"type": "json_object"},
-            )
-            content = (resp.choices[0].message.content or "").strip()
+            content = openai_json(prompt, model)
             break
         except Exception as e:
             last_error = e
             if attempt == retries:
-                return {"label": "n/a", "grau_ambiguidade": "alto", "reason": f"API error: {e}"}
-            time.sleep(2 * attempt)
+                return {
+                    "label": "n/a",
+                    "grau_ambiguidade": "alto",
+                    "reason_sentimento": f"API error: {e}",
+                }
+            retry_seconds = re.search(r"retry in ([0-9.]+)s|seconds:\s*(\d+)", str(e), re.IGNORECASE)
+            suggested_delay = 0.0
+            if retry_seconds:
+                suggested_delay = float(next(value for value in retry_seconds.groups() if value))
+            time.sleep(max(2 * attempt, suggested_delay))
 
     try:
-        parsed = json.loads(content)
+        parsed = parse_json_response(content)
         parsed["label"] = normalize_label(parsed.get("label"))
         return parsed
     except Exception:
-        return {"label": "n/a", "grau_ambiguidade": "alto", "reason": content or str(last_error or "")}
+        return {
+            "label": "n/a",
+            "grau_ambiguidade": "alto",
+            "reason_sentimento": content or str(last_error or ""),
+        }
 
 
 def load_data_for_classification() -> tuple[dict, dict, Path]:
@@ -214,11 +245,7 @@ def write_labels_csv(rows: list[dict], outpath: Path) -> None:
 def article_to_row(rec: dict, out: dict, model: str) -> dict:
     label = normalize_label(out.get("label"))
     grau_ambiguidade = normalize_ambiguity(out.get("grau_ambiguidade"))
-    event_confidence = out.get("event_confidence", "")
-    try:
-        event_confidence = round(float(event_confidence), 4)
-    except Exception:
-        event_confidence = ""
+    reason = out.get("reason_sentimento") or out.get("reason") or ""
     event_name = str(out.get("evento") or out.get("evento_chave") or "").strip()
     event_key = str(out.get("evento_chave") or event_name or "").strip()
     return {
@@ -237,7 +264,7 @@ def article_to_row(rec: dict, out: dict, model: str) -> dict:
         "label": label,
         "sentiment_score": SCORE_MAP[label],
         "grau_ambiguidade": grau_ambiguidade,
-        "reason": str(out.get("reason", ""))[:1200],
+        "reason": str(reason)[:1200],
         "evidencia_sentimento": str(out.get("evidencia_sentimento", ""))[:1200],
         "evento": event_name,
         "evento_chave": event_key,
@@ -247,7 +274,6 @@ def article_to_row(rec: dict, out: dict, model: str) -> dict:
         "data_evento": str(out.get("data_evento", ""))[:100],
         "descricao_curta": str(out.get("descricao_curta", ""))[:1200],
         "evidencia_evento": str(out.get("evidencia_evento", ""))[:1200],
-        "event_confidence": event_confidence,
         "model": model,
     }
 
