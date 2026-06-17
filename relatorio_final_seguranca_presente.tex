@@ -13,7 +13,7 @@
 \usepackage{xcolor}
 \usepackage{enumitem}
 \usepackage{lmodern}
-
+\usepackage{indentfirst}
 \geometry{margin=2.5cm}
 \emergencystretch=3em
 \setlength{\parindent}{1.25cm}
@@ -48,7 +48,7 @@
 \vspace{0.8cm}
 {\huge \textbf{Entre Elogios e Críticas}\par}
 \vspace{0.35cm}
-{\Large Segurança Presente como Política Pública: Avaliação de Percepções Digitais\par}
+{\Large Segurança Presente como Política Pública: Framework de Avaliação da Percepção Pública \par}
 
 \vfill
 
@@ -145,8 +145,6 @@ Entre as notícias com data válida, o período observado vai de 31 de maio de 2
 Primeiro, os dados brutos foram carregados e convertidos em observações padronizadas. Em seguida, cada notícia passou por filtragem temática, composição textual, classificação automatizada, validação dos rótulos retornados, deduplicação, agregação estatística e organização dos resultados finais.
 
 A opção por um fluxo sequencial teve finalidade metodológica: permitir que cada etapa produzisse um artefato analítico verificável, ao mesmo tempo em que preservava a rastreabilidade entre o registro bruto e a notícia classificada. Assim, a pesquisa não se limitou a solicitar respostas individuais a um modelo de linguagem; ela construiu uma cadeia de tratamento dos dados capaz de gerar resultados consistentes e replicáveis.
-
-\subsection{Padronização dos registros}
 
 Cada notícia foi convertida em uma observação analítica contendo identificador, ordem de ocorrência na base, título, fonte, data, resumo, texto bruto e metadados de origem. Essa padronização foi necessária porque os textos coletados por webscrapping não possuem estrutura uniforme. A normalização permitiu tratar registros completos e incompletos dentro de um mesmo protocolo de análise.
 

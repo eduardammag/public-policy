@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.5.28)  17 JUN 2026 01:53
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.5.28)  17 JUN 2026 02:10
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -374,6 +374,9 @@ LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 (Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
 )
+(C:\Users\dudda\AppData\Local\Programs\MiKTeX\tex/latex/tools\indentfirst.sty
+Package: indentfirst 2023/07/02 v1.03 Indent first paragraph (DPC)
+)
 Package hyperref Info: Option `colorlinks' set `true' on input line 30.
 LaTeX Font Info:    Trying to load font information for T1+lmr on input line 32
 .
@@ -525,19 +528,19 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 
 [2] [3] [4]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 1
-59.
+57.
 
 (C:\Users\dudda\AppData\Local\Programs\MiKTeX\tex/latex/lm\t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) [5]
 [6]
-Underfull \hbox (badness 1354) in paragraph at lines 188--189
+Underfull \hbox (badness 1354) in paragraph at lines 186--187
 \T1/lmr/m/n/12 mi-nis-tra-tiva ou des-cri-tiva, sem ava-li-a-ção
  []
 
 [7] [8]
 ! Undefined control sequence.
-l.266 \text
+l.264 \text
            {SCOREnormalizado} = \frac{\text{SCOREmÃ©dio} + 2}{4}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -548,7 +551,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 <argument> \text 
                  {SCOREmÃ©dio} + 2
-l.266 ...izado} = \frac{\text{SCOREmÃ©dio} + 2}{4}
+l.264 ...izado} = \frac{\text{SCOREmÃ©dio} + 2}{4}
                                                   
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -557,36 +560,36 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-LaTeX Warning: Command \' invalid in math mode on input line 266.
+LaTeX Warning: Command \' invalid in math mode on input line 264.
 
 
-Overfull \hbox (0.58305pt too wide) in alignment at lines 273--277
+Overfull \hbox (0.58305pt too wide) in alignment at lines 271--275
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (0.58305pt too wide) in alignment at lines 277--285
+Overfull \hbox (0.58305pt too wide) in alignment at lines 275--283
  [] [] [] [] [] 
  []
 
 [9{C:/Users/dudda/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathit.en
 c}{C:/Users/dudda/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-rm.enc}]
-Overfull \hbox (0.58305pt too wide) in alignment at lines 293--297
+Overfull \hbox (0.58305pt too wide) in alignment at lines 291--295
  [] [] [] [] [] 
  []
 
 
-Underfull \hbox (badness 2111) in paragraph at lines 300--300
+Underfull \hbox (badness 2111) in paragraph at lines 298--298
 []|\T1/lmr/m/n/12 Transferência do Se-gu-rança Pre-sente
  []
 
 
-Underfull \hbox (badness 2111) in paragraph at lines 301--301
+Underfull \hbox (badness 2111) in paragraph at lines 299--299
 []|\T1/lmr/m/n/12 Transferência do Se-gu-rança Pre-sente
  []
 
 
-Overfull \hbox (0.58305pt too wide) in alignment at lines 297--304
+Overfull \hbox (0.58305pt too wide) in alignment at lines 295--302
  [] [] [] [] [] 
  []
 
@@ -596,13 +599,13 @@ Overfull \hbox (0.58305pt too wide) in alignment at lines 297--304
 File: graficos/barras_quantidade_por_sentimento.png Graphic file (type png)
 <use graficos/barras_quantidade_por_sentimento.png>
 Package pdftex.def Info: graficos/barras_quantidade_por_sentimento.png  used on
- input line 314.
+ input line 312.
 (pdftex.def)             Requested size: 409.71692pt x 234.86975pt.
 <graficos/histograma_escore_sentimento.png, id=228, 774.4935pt x 448.877pt>
 File: graficos/histograma_escore_sentimento.png Graphic file (type png)
 <use graficos/histograma_escore_sentimento.png>
 Package pdftex.def Info: graficos/histograma_escore_sentimento.png  used on inp
-ut line 320.
+ut line 318.
 (pdftex.def)             Requested size: 409.71692pt x 237.46532pt.
  [11 <./graficos/barras_quantidade_por_sentimento.png>]
 <graficos/linha_percentual_mensal_sentimentos.png, id=235, 1063.5735pt x 547.24
@@ -610,14 +613,14 @@ ut line 320.
 File: graficos/linha_percentual_mensal_sentimentos.png Graphic file (type png)
 <use graficos/linha_percentual_mensal_sentimentos.png>
 Package pdftex.def Info: graficos/linha_percentual_mensal_sentimentos.png  used
- on input line 328.
+ on input line 326.
 (pdftex.def)             Requested size: 432.48051pt x 222.52629pt.
 <graficos/area_empilhada_percentual_mensal.png, id=236, 1063.5735pt x 546.843pt
 >
 File: graficos/area_empilhada_percentual_mensal.png Graphic file (type png)
 <use graficos/area_empilhada_percentual_mensal.png>
 Package pdftex.def Info: graficos/area_empilhada_percentual_mensal.png  used on
- input line 334.
+ input line 332.
 (pdftex.def)             Requested size: 432.48051pt x 222.36302pt.
  [12 <./graficos/histograma_escore_sentimento.png> <./graficos/linha_percentual
 _mensal_sentimentos.png>]
@@ -625,13 +628,13 @@ _mensal_sentimentos.png>]
 File: graficos/linha_volume_mensal_noticias.png Graphic file (type png)
 <use graficos/linha_volume_mensal_noticias.png>
 Package pdftex.def Info: graficos/linha_volume_mensal_noticias.png  used on inp
-ut line 340.
+ut line 338.
 (pdftex.def)             Requested size: 432.48051pt x 197.54718pt.
 <graficos/barras_empilhadas_top_fontes.png, id=247, 919.0335pt x 551.2595pt>
 File: graficos/barras_empilhadas_top_fontes.png Graphic file (type png)
 <use graficos/barras_empilhadas_top_fontes.png>
 Package pdftex.def Info: graficos/barras_empilhadas_top_fontes.png  used on inp
-ut line 348.
+ut line 346.
 (pdftex.def)             Requested size: 432.48051pt x 259.41164pt.
  [13 <./graficos/area_empilhada_percentual_mensal.png> <./graficos/linha_volume
 _mensal_noticias.png>] [14 <./graficos/barras_empilhadas_top_fontes.png>]
@@ -640,25 +643,36 @@ _mensal_noticias.png>] [14 <./graficos/barras_empilhadas_top_fontes.png>]
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
  ***********
-Package rerunfilecheck Info: File `relatorio_final_seguranca_presente.out' has 
-not changed.
-(rerunfilecheck)             Checksum: E59119D8187B4FA24F8E2BEAE8B0C106;5049.
+
+
+Package rerunfilecheck Warning: File `relatorio_final_seguranca_presente.out' h
+as changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `relatorio_final_seguranca_presente.
+out':
+(rerunfilecheck)             Before: E59119D8187B4FA24F8E2BEAE8B0C106;5049
+(rerunfilecheck)             After:  BF300352F841EA0BCFEFC82388A0F681;4849.
  ) 
 Here is how much of TeX's memory you used:
- 11666 strings out of 467871
- 188073 string characters out of 5418376
- 627124 words of memory out of 5000000
- 40324 multiletter control sequences out of 15000+600000
+ 11684 strings out of 467871
+ 188671 string characters out of 5418376
+ 627253 words of memory out of 5000000
+ 40339 multiletter control sequences out of 15000+600000
  664146 words of font info for 61 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,10n,79p,776b,599s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Users/dudda/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx12.pf
-b><C:/Users/dudda/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi12.pf
-b><C:/Users/dudda/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr12.pfb
-><C:/Users/dudda/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr17.pfb>
-<C:/Users/dudda/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt12.pfb>
 
-Output written on relatorio_final_seguranca_presente.pdf (15 pages, 1210311 byt
+pdfTeX warning (dest): name{subsection.5.1} has been referenced but does not ex
+ist, replaced by a fixed one
+
+<C:/Users/dudda/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx12.pfb>
+<C:/Users/dudda/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi12.pfb>
+<C:/Users/dudda/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr12.pfb><
+C:/Users/dudda/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr17.pfb><C
+:/Users/dudda/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt12.pfb>
+Output written on relatorio_final_seguranca_presente.pdf (15 pages, 1210404 byt
 es).
 PDF statistics:
  306 PDF objects out of 1000 (max. 8388607)

@@ -2,3 +2,4 @@ openai
 python-dotenv
 pandas
 matplotlib
+pip install requests pandas beautifulsoup4 trafilatura feedparser tqdm python-dateutil
